@@ -1,0 +1,12 @@
+module ServeurBancaire{
+	
+	interface BankCostumer{
+		void deposit(in unsigned long id, in unsigned long amount);
+		void withdraw(in unsigned long id, in unsigned long amount);
+		long balance(in unsigned long id);
+		long create(in string name,in unsigned long amount);
+		void destroy(in unsigned long a);
+		void transfert(in long from, in long bank_id, in string name,in unsigned long amount);
+	};
+	
+};
