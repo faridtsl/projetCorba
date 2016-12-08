@@ -3,7 +3,7 @@ package ServeurBancaire;
 import java.util.*;
 import org.omg.CORBA.ORB;
 
-public class BankCustomerImpl extends BankCostumerPOA {
+public class BankCustomerImpl extends BankCustomerPOA {
 
 	private LinkedList<Account> accounts;
 	private ORB orb;
@@ -48,7 +48,7 @@ public class BankCustomerImpl extends BankCostumerPOA {
 	}
 
 	@Override
-	public void transfert(int from, int bank_id, String name, int amount) {
+	public void transfert(int from, int bank_id, int to, int amount) {
 		// TODO Auto-generated method stub
 		
 	}
