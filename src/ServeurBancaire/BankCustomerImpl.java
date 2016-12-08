@@ -1,8 +1,7 @@
-package MyClasses;
+package ServeurBancaire;
 
 import java.util.*;
 import org.omg.CORBA.ORB;
-import ServeurBancaire.BankCostumerPOA;
 
 public class BankCustomerImpl extends BankCostumerPOA {
 

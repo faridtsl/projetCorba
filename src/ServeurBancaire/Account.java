@@ -1,4 +1,4 @@
-package MyClasses;
+package ServeurBancaire;
 
 import java.util.*;
 
