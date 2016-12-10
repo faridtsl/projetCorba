@@ -10,10 +10,10 @@ public class ClientServer
       try {
           ORB orb = ORB.init(args, null);
           
-          Client cli1 = new Client(orb,"NameService","Bank1","Client1",200);
-          Client cli2 = new Client(orb,"NameService","Bank1","Client2",100);
-          Client cli3 = new Client(orb,"NameService","Bank2","Client3",500);
-          Client cli4 = new Client(orb,"NameService","Bank3","Client4",300);
+          Client cli1 = new Client(orb,"NameService",1,"Client1",200);
+          Client cli2 = new Client(orb,"NameService",1,"Client2",100);
+          Client cli3 = new Client(orb,"NameService",2,"Client3",500);
+          Client cli4 = new Client(orb,"NameService",3,"Client4",300);
           
           // Create Account
           
@@ -43,6 +43,14 @@ public class ClientServer
           System.out.println(cli2);
           System.out.println(cli3);
           System.out.println(cli4);
+          
+          Thread.sleep(13000);
+          
+          System.out.println(cli1);
+          System.out.println(cli2);
+          System.out.println(cli3);
+          System.out.println(cli4);
+          
           
       } catch (Exception e) {
           System.err.println(e.getMessage());

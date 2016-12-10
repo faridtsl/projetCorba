@@ -1,0 +1,19 @@
+module InterBank{
+	
+	struct Transact{
+		unsigned long from;
+		unsigned long bank_from;
+		unsigned long to;
+		unsigned long bank_to;
+		unsigned long amount;
+		unsigned long done;
+	};
+	
+	typedef sequence<Transact> Transacts;
+
+	interface BankTransact{
+		void saveTransact(in unsigned long bank_from, in unsigned long from, in unsigned long bank_id, in unsigned long to, in unsigned long amount);
+		Transacts passTransacts(in unsigned long bank_id );
+	};
+
+};
