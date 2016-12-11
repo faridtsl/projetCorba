@@ -10,7 +10,7 @@ public class BankTransactImpl extends BankTransactPOA {
 	
 	public BankTransactImpl(ORB orb){
 		this.orb = orb;
-		transacts = new HashMap();
+		transacts = new HashMap<Integer, List<Transact>>();
 	}
 
 	@Override
@@ -19,28 +19,26 @@ public class BankTransactImpl extends BankTransactPOA {
 		Transact t = new Transact(from, bank_from, to, bank_id, amount, 0);
 		List<Transact> l = transacts.get(bank_id);
 		if(l == null){
-			l = new LinkedList();
+			l = new LinkedList<Transact>();
+			transacts.put(bank_id,l);
 		}
 		l.add(t);
-		transacts.put(bank_id,l);
 	}
 
 	@Override
 	public Transact[] passTransacts(int bank_id) {
 		List<Transact> l = transacts.get(bank_id);
-		if(l == null) return new Transact[0];
-		List<Transact> res = new LinkedList();
-		List<Transact> ll = new LinkedList();
+		if(l == null) 
+			return new Transact[0];
+		List<Transact> res = new LinkedList<Transact>();
 		for( Transact t : l ){
 			if(t.getDone() == 0){
 				res.add(t);
+				t.setDone(1);
 			}
-			t.setDone(1);
-			ll.add(t);
 		}
-		transacts.put(bank_id,ll);
 		Transact[] arr = new Transact[res.size()];
-		return l.toArray(arr);
+		return res.toArray(arr);
 	}
 
 

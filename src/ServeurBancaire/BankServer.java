@@ -14,53 +14,62 @@ public class BankServer {
 	public static void main(String[] args) {
 		// TODO Auto-generated method stub
 		try {
-			// create and initialize the ORB
-			ORB orb = ORB.init(args, null);
-
-			// get reference to rootpoa & activate the POAManager
-			POA rootpoa = POAHelper.narrow(orb.resolve_initial_references("RootPOA"));
-			rootpoa.the_POAManager().activate();
-
-			// create servant and register it with the ORB
-			BankCustomerImpl bankServant1 = new BankCustomerImpl(orb, 1);
-			BankCustomerImpl bankServant2 = new BankCustomerImpl(orb, 2);
-			BankCustomerImpl bankServant3 = new BankCustomerImpl(orb, 3);
-
-			callbacks(bankServant1);
-			callbacks(bankServant2);
-			callbacks(bankServant3);
-
-			// get object reference from the servant
-			org.omg.CORBA.Object ref1 = rootpoa.servant_to_reference(bankServant1);
-			org.omg.CORBA.Object ref2 = rootpoa.servant_to_reference(bankServant2);
-			org.omg.CORBA.Object ref3 = rootpoa.servant_to_reference(bankServant3);
-			BankCustomer href1 = BankCustomerHelper.narrow(ref1);
-			BankCustomer href2 = BankCustomerHelper.narrow(ref2);
-			BankCustomer href3 = BankCustomerHelper.narrow(ref3);
-
-			// get the root naming context
-			// NameService invokes the name service
-			org.omg.CORBA.Object objRef = orb.resolve_initial_references("NameService");
-			// Use NamingContextExt which is part of the Interoperable
-			// Naming Service (INS) specification.
-			NamingContextExt ncRef = NamingContextExtHelper.narrow(objRef);
-
-			// bind the Object Reference in Naming
-			String name1 = "bank1";
-			String name2 = "bank2";
-			String name3 = "bank3";
-			NameComponent path1[] = ncRef.to_name(name1);
-			ncRef.rebind(path1, href1);
-
-			NameComponent path2[] = ncRef.to_name(name2);
-			ncRef.rebind(path2, href2);
-
-			NameComponent path3[] = ncRef.to_name(name3);
-			ncRef.rebind(path3, href3);
-
-			System.out.println("BankServer ready and waiting ...");
-			// wait for invocations from clients
-			orb.run();
+			if (args.length < 2) {
+				System.out.println("Please use : java BankServer <banks port> <interbank port>");
+			} else {
+				String banksPort = args[0];
+				String interbankPort = args[1];
+				
+				// create and initialize the ORB
+				String arg[] = {"-ORBInitialPort",banksPort,"-ORBInitialHost","localhost"};
+				
+				ORB orb = ORB.init(arg, null);
+	
+				// get reference to rootpoa & activate the POAManager
+				POA rootpoa = POAHelper.narrow(orb.resolve_initial_references("RootPOA"));
+				rootpoa.the_POAManager().activate();
+	
+				// create servant and register it with the ORB
+				BankCustomerImpl bankServant1 = new BankCustomerImpl(interbankPort, 1);
+				BankCustomerImpl bankServant2 = new BankCustomerImpl(interbankPort, 2);
+				BankCustomerImpl bankServant3 = new BankCustomerImpl(interbankPort, 3);
+	
+				callbacks(bankServant1);
+				callbacks(bankServant2);
+				callbacks(bankServant3);
+	
+				// get object reference from the servant
+				org.omg.CORBA.Object ref1 = rootpoa.servant_to_reference(bankServant1);
+				org.omg.CORBA.Object ref2 = rootpoa.servant_to_reference(bankServant2);
+				org.omg.CORBA.Object ref3 = rootpoa.servant_to_reference(bankServant3);
+				BankCustomer href1 = BankCustomerHelper.narrow(ref1);
+				BankCustomer href2 = BankCustomerHelper.narrow(ref2);
+				BankCustomer href3 = BankCustomerHelper.narrow(ref3);
+	
+				// get the root naming context
+				// NameService invokes the name service
+				org.omg.CORBA.Object objRef = orb.resolve_initial_references("NameService");
+				// Use NamingContextExt which is part of the Interoperable
+				// Naming Service (INS) specification.
+				NamingContextExt ncRef = NamingContextExtHelper.narrow(objRef);
+	
+				// bind the Object Reference in Naming
+				String name1 = "bank1";
+				String name2 = "bank2";
+				String name3 = "bank3";
+				NameComponent path1[] = ncRef.to_name(name1);
+				ncRef.rebind(path1, href1);
+	
+				NameComponent path2[] = ncRef.to_name(name2);
+				ncRef.rebind(path2, href2);
+	
+				NameComponent path3[] = ncRef.to_name(name3);
+				ncRef.rebind(path3, href3);
+	
+				System.out.println("BankServer ready and waiting ...");
+				// wait for invocations from clients
+				orb.run();
+			}
 		}
 
 		catch (Exception e) {

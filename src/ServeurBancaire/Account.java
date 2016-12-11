@@ -62,4 +62,8 @@ public class Account{
 		this.solde = solde;
 	}
 
+	public String toString() {
+		String str = "\t Account n°" + id + "\t Solde : " + getSolde();
+		return str;
+	}
 }

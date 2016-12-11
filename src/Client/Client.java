@@ -25,8 +25,9 @@ public class Client {
 	public Client(ORB orb, String service, int bankId, String name, int money) {
 		 try {	       
 	          org.omg.CORBA.Object objRef;
-	          objRef = orb.resolve_initial_references(service);
-	          NamingContextExt ncRef = NamingContextExtHelper.narrow(objRef);
+	          objRef = orb.resolve_initial_references("NameService");
+			  NamingContextExt ncRef = NamingContextExtHelper.narrow(objRef);
+
 	          
 	          this.bankId = bankId;
 	          

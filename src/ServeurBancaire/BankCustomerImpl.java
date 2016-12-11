@@ -11,21 +11,21 @@ import InterBank.Transact;
 
 public class BankCustomerImpl extends BankCustomerPOA {
 
-	private LinkedList<Account> accounts;
+	private HashMap<Integer, Account> accounts;
 	private ORB orb;
 	private int id;
 	private BankTransact interbank;
 
-	public BankCustomerImpl(ORB orb, int id) {
+	public BankCustomerImpl(String port, int id) {
 		this.id = id;
-		this.orb = orb;
-		accounts = new LinkedList<Account>();		
+		
+		String args[] = {"-ORBInitialPort",port,"-ORBInitialHost","localhost"};
+		this.orb = ORB.init(args, null);
+		accounts = new HashMap<Integer, Account>();		
 		try {
 
-			String arg[] = {"-ORBInitialPort","1050","-ORBInitialHost","localhost"};
-	        ORB orbt = ORB.init(arg, null);
 			org.omg.CORBA.Object objRef;
-			objRef = orbt.resolve_initial_references("NameService");
+			objRef = orb.resolve_initial_references("NameService");
 			NamingContextExt ncRef = NamingContextExtHelper.narrow(objRef);
 
 			objRef = ncRef.resolve_str("interbank");
@@ -40,40 +40,52 @@ public class BankCustomerImpl extends BankCustomerPOA {
 	@Override
 	public void deposit(int id, int amount) {
 		// TODO Auto-generated method stub
-		this.accounts.get(this.accounts.indexOf(new Account(id))).deposit(amount);
+		Account a = this.accounts.get(id);
+		if (a != null)
+			a.deposit(amount);
 	}
 
 	@Override
 	public void withdraw(int id, int amount) {
 		// TODO Auto-generated method stub
-		this.accounts.get(this.accounts.indexOf(new Account(id))).withdraw(amount);
+		Account a = this.accounts.get(id);
+		if (a != null)
+			a.withdraw(amount);
 	}
 
 	@Override
 	public int balance(int id) {
 		// TODO Auto-generated method stub
-		return this.accounts.get(this.accounts.indexOf(new Account(id))).balance();
+		Account a = this.accounts.get(id);
+		if (a != null)
+			return a.balance();
+		return 0;
 	}
 
 	@Override
 	public int create(String name, int amount) {
 		// TODO Auto-generated method stub
 		Account a = new Account(name, amount);
-		this.accounts.add(a);
+		this.accounts.put(a.getId(), a);
 		return a.getId();
 	}
 
 	@Override
 	public void destroy(int a) {
 		// TODO Auto-generated method stub
-		this.accounts.remove(this.accounts.get(this.accounts.indexOf(new Account(a))));
+		Account b = this.accounts.get(a);
+		if (b != null)
+			this.accounts.remove(b.getId());
 	}
 
 	@Override
 	public void transfert(int from, int bank_id, int to, int amount) {
 		// TODO Auto-generated method stub
-		this.withdraw(from, amount);
-		interbank.saveTransact(id, from, bank_id, to, amount);
+		Account a = this.accounts.get(from);
+		if (a != null) {
+			this.withdraw(from, amount);
+			interbank.saveTransact(id, from, bank_id, to, amount);
+		}
 	}
 	
 	protected void callback(){
@@ -81,6 +93,12 @@ public class BankCustomerImpl extends BankCustomerPOA {
 		for(Transact t : ts){
 			this.deposit(t.to, t.amount);
 		}
+		
+		String log = "Bank n°" + id + "\n";
+		for(Account a : accounts.values()) {
+			log += a + "\n";
+		}
+		System.out.println(log);
 	}
 
 }
