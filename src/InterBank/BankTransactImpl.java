@@ -17,12 +17,19 @@ public class BankTransactImpl extends BankTransactPOA {
 	public void saveTransact(int bank_from, int from, int bank_id, int to, int amount) {
 		// TODO Auto-generated method stub
 		Transact t = new Transact(from, bank_from, to, bank_id, amount, 0);
-		List<Transact> l = transacts.get(bank_id);
-		if(l == null){
-			l = new LinkedList<Transact>();
-			transacts.put(bank_id,l);
+		List<Transact> lto = transacts.get(bank_id);
+
+		List<Transact> lfrom = transacts.get(bank_from);
+		if(lto == null){
+			lto = new LinkedList<Transact>();
+			transacts.put(bank_id,lto);
 		}
-		l.add(t);
+		if(lfrom == null){
+			lfrom = new LinkedList<Transact>();
+			transacts.put(bank_from,lfrom);
+		}
+		lto.add(t);
+		lfrom.add(t);
 	}
 
 	@Override
@@ -32,9 +39,13 @@ public class BankTransactImpl extends BankTransactPOA {
 			return new Transact[0];
 		List<Transact> res = new LinkedList<Transact>();
 		for( Transact t : l ){
-			if(t.getDone() == 0){
+			if(t.getDone() == 0 && bank_id == t.getBank_to()){
 				res.add(t);
 				t.setDone(1);
+			}
+			if(t.getDone() == 1 && bank_id == t.getBank_from()){
+				res.add(t);
+				t.setDone(2);
 			}
 		}
 		Transact[] arr = new Transact[res.size()];

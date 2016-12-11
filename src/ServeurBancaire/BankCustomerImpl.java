@@ -83,7 +83,6 @@ public class BankCustomerImpl extends BankCustomerPOA {
 		// TODO Auto-generated method stub
 		Account a = this.accounts.get(from);
 		if (a != null) {
-			this.withdraw(from, amount);
 			interbank.saveTransact(id, from, bank_id, to, amount);
 		}
 	}
@@ -91,7 +90,12 @@ public class BankCustomerImpl extends BankCustomerPOA {
 	protected void callback(){
 		Transact ts[] = interbank.passTransacts(id);
 		for(Transact t : ts){
-			this.deposit(t.to, t.amount);
+			if (t.bank_from == id) {
+				this.withdraw(t.from, t.amount);
+			}
+			else if (t.bank_to == id) {
+				this.deposit(t.to, t.amount);
+			}
 		}
 		
 		String log = "Bank n°" + id + "\n";
