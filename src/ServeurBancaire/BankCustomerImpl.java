@@ -81,6 +81,11 @@ public class BankCustomerImpl extends BankCustomerPOA {
 	@Override
 	public void transfert(int from, int bank_id, int to, int amount) {
 		// TODO Auto-generated method stub
+		if(bank_id == this.id){
+			this.deposit(to,amount);
+			this.withdraw(from,amount);
+			return ;
+		}
 		Account a = this.accounts.get(from);
 		if (a != null) {
 			interbank.saveTransact(id, from, bank_id, to, amount);
