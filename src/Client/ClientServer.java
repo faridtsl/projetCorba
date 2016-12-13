@@ -57,6 +57,23 @@ public class ClientServer
 	          System.out.println(cli2);
 	          System.out.println(cli3);
 	          System.out.println(cli4);
+	          
+	          cli3.transfert(cli1, 100);
+	          cli2.transfert(cli1, 50);
+	          cli4.transfert(cli3, 20);
+	          
+
+	          System.out.println(cli1);
+	          System.out.println(cli2);
+	          System.out.println(cli3);
+	          System.out.println(cli4);
+	          
+	          Thread.sleep(13000);
+	          
+	          System.out.println(cli1);
+	          System.out.println(cli2);
+	          System.out.println(cli3);
+	          System.out.println(cli4);
     	  }
           
       } catch (Exception e) {

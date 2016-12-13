@@ -1,10 +1,7 @@
 all: klass
 
-idl: bank.idl
-	idlj -fall bank.idl
-
 klass:
-	javac src/*/*.java
+	mkdir -p bin && javac src/*/*.java -d ./bin
 
 clean:
 	$(RM) -rf *.class 
@@ -18,10 +15,13 @@ runNameServBanks:
 	tnameserv -ORBInitialPort 3000
 
 runInterbank:
-	cd src && java InterBank.InterBankServer 2000
+	cd bin && java InterBank.InterBankServer 2000
 
 runBanks:
-	cd src && java ServeurBancaire.BankServer 3000 2000
+	cd bin && java ServeurBancaire.BankServer 3000 2000
 
 runClients:
-	cd src && java Client.ClientServer 3000
+	cd bin && java Client.ClientServer 3000
+	
+runLogInterbank:
+	cd bin && java InterBank.InterBankLogClient 2000

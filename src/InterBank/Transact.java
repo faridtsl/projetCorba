@@ -73,5 +73,9 @@ public final class Transact implements org.omg.CORBA.portable.IDLEntity {
 	public void setDone(int done) {
 		this.done = done;
 	}
-
+	
+	public String toString() {
+		String str = "From " + from + "-" + bank_from + " to " + to + "-" + bank_to + "\t | Amount : " + amount + "\t | Done : " + done;;
+		return str;
+	}
 } // class Transact
